@@ -1,58 +1,7 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import { exec } from 'child_process';
+import { $Directory, $File } from '@neotro/system';
 import * as path from 'path';
-
-export function deleteFolder(folder: string) {
-	if (fs.existsSync(folder)) {
-		for (const entry of fs.readdirSync(folder)) {
-			const location = path.join(folder, entry);
-			if (fs.lstatSync(location).isDirectory()) {
-				deleteFolder(location);
-			} else {
-				fs.unlinkSync(location);
-			}
-		}
-		fs.rmdirSync(folder);
-	}
-};
-
-function copyFileSync(source: string, target: string) {
-
-	var targetFile = target;
-
-	//if target is a directory a new file with the same name will be created
-	if (fs.existsSync(target)) {
-		if (fs.lstatSync(target).isDirectory()) {
-			targetFile = path.join(target, path.basename(source));
-		}
-	}
-
-	fs.writeFileSync(targetFile, fs.readFileSync(source));
-}
-
-function copyFolderRecursiveSync(source: string, target: string) {
-	var files = [];
-
-	//check if folder needs to be created or integrated
-	var targetFolder = path.join(target, path.basename(source));
-	if (!fs.existsSync(targetFolder)) {
-		fs.mkdirSync(targetFolder);
-	}
-
-	//copy
-	if (fs.lstatSync(source).isDirectory()) {
-		files = fs.readdirSync(source);
-		files.forEach(function (file) {
-			var curSource = path.join(source, file);
-			if (fs.lstatSync(curSource).isDirectory()) {
-				copyFolderRecursiveSync(curSource, targetFolder);
-			} else {
-				copyFileSync(curSource, targetFolder);
-			}
-		});
-	}
-}
 
 export interface IBlueprintVariable {
 	name: string;
@@ -76,19 +25,18 @@ export function activate(context: vscode.ExtensionContext) {
 			const command = await vscode.window.showQuickPick(['Create', 'Generate'], { placeHolder: 'Blueprints' });
 			switch (command) {
 				case 'Create':
-					fs.mkdirSync(BLUEPRINTS_DIRECTORY, { recursive: true });
 					vscode.window.showInputBox({ placeHolder: 'Blueprint Name' }).then(async name => {
 						if (name) {
 							const folder = `${BLUEPRINTS_DIRECTORY}/${name}`;
-							if (!fs.existsSync(folder)) {
-								fs.mkdirSync(folder, { recursive: true });
+							if (!$Directory.exists(folder)) {
+								$Directory.create(folder);
 								const config: IBlueprintConfig = {
 									name,
 									variables: [],
 									prescripts: [],
 									postscripts: []
 								};
-								fs.writeFileSync(`${folder}/blueprint.json`, JSON.stringify(config, null, '\t'));
+								$File.create(`${folder}/blueprint.json`, JSON.stringify(config, null, '\t'));
 								exec(`start "" "${folder}"`);
 
 							} else {
@@ -98,18 +46,21 @@ export function activate(context: vscode.ExtensionContext) {
 					});
 					break;
 				case 'Generate':
+					console.log(targetPath);
 					if (targetPath) {
-
+						console.log('Generating...');
+						const names = $Directory.getAll(BLUEPRINTS_DIRECTORY).map(folder => path.basename(folder));
+						console.log(names);
+						const command = await vscode.window.showQuickPick(['Item'].concat(names), { placeHolder: 'Blueprints' });
 					} else {
 						vscode.window.showInformationMessage('Unable to generate blueprint. Invalid directory specified!');
 					}
 					break;
 				default:
-
+					console.error('Error');
 			}
 		})
 	);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() { }
