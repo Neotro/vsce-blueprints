@@ -1,8 +1,12 @@
 {
 	"name": "blueprints",
-	"displayName": "blueprints",
-	"description": "Workspace blueprints",
+	"displayName": "Blueprints",
+	"description": "Workspace Blueprints",
+	"icon": "assets/blueprints.png",
 	"version": "0.0.1",
+	"author": {
+		"name": "Rudi Jansen van Vuuren"
+	},
 	"engines": {
 		"vscode": "^1.46.0"
 	},
@@ -52,6 +56,7 @@
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
-		"@neotro/system": "*"
+		"@neotro/core": "^1.0.19",
+		"@neotro/system": "^1.0.14"
 	}
 }

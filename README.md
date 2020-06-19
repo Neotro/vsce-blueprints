@@ -1,65 +1,38 @@
-# blueprints README
+# Blueprints
 
-This is the README for your extension "blueprints". After writing up a brief description, we recommend including the following sections.
+This extension allows you to create workspace files via a blueprint.
 
-## Features
+## How to generate a blueprint?
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+![Generating a blueprint](assets/generate-blueprint.gif)
 
-For example if there is an image subfolder under your extension project workspace:
+## How to create a new blueprint?
 
-\!\[feature X\]\(images/feature-x.png\)
+![Creating a blueprint](assets/create-blueprint.gif)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Blueprint Configuration
 
-## Requirements
+Each blueprint should have a `blueprint.json` file. This file contains the manifest for the blueprint.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+| Property | Description |
+|--|--|
+| name | The name of the blueprint |
+| variables | An array of variables to be used throughout the blueprint. |
+| prescripts | Scripts to be run within the target directory, before the blueprint is initialized . |
+| postscripts | Scripts to be run within the target directory, after the blueprint has been initialized . |
 
-## Extension Settings
+## Variable Syntax
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Variables are replaced when the blueprint is initialized. The following syntaxes can be used to mutate the case of the variable's value.
 
-For example:
+| Syntax | Description |
+|--|--|
+| $[var] | The value as is |
+| $[=var] | Pascal Case |
+| $[~var] | Camel Case |
+| $[-var] | Kebab Case |
+| $[_var] | Snake Case |
 
-This extension contributes the following settings:
+## VSC Commands
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+`blueprints.blueprints`: Opens the Blueprints menu.

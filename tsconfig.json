@@ -1,25 +1,16 @@
 {
-	"compileOnSave": false,
 	"compilerOptions": {
-		"baseUrl": "./",
-		"outDir": "./dist",
-		"sourceMap": true,
-		"declaration": true,
-		"downlevelIteration": true,
-		"experimentalDecorators": true,
 		"module": "commonjs",
-		"moduleResolution": "node",
-		"importHelpers": true,
-		"target": "es2015",
-		"emitDecoratorMetadata": true,
-		"typeRoots": [
-			"node_modules/@types"
-		],
+		"target": "es6",
+		"outDir": "out",
 		"lib": [
-			"es2018",
-			"dom"
+			"es6"
 		],
-		"paths": {
-		}
-	}
+		"sourceMap": true,
+		"rootDir": "src"
+	},
+	"exclude": [
+		"node_modules",
+		".vscode-test"
+	]
 }
