@@ -19,7 +19,7 @@ export interface IBlueprintConfig {
 	postscripts?: string[];
 }
 
-const BLUEPRINTS_DIRECTORY = `${__dirname}/blueprints`;
+const BLUEPRINTS_DIRECTORY = `${__dirname}\\blueprints`;
 
 export enum BlueprintsCommands { OpenBlueprintsFolder = 'Open Blueprints Folder', CreateBlueprint = 'Create Blueprint', GenerateBlueprint = 'Generate Blueprint' };
 
@@ -45,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 									prescripts: [],
 									postscripts: []
 								};
-								$File.create(`${folder}/blueprint.json`, JSON.stringify(config, null, '\t'));
+								$File.create(`${folder}\\blueprint.json`, JSON.stringify(config, null, '\t'));
 								exec(`start "" "${folder}"`);
 
 							} else {
@@ -56,7 +56,7 @@ export function activate(context: vscode.ExtensionContext) {
 					break;
 				case BlueprintsCommands.GenerateBlueprint:
 					if (targetPath) {
-						const blueprints: IBlueprintConfig[] = $File.getAll(BLUEPRINTS_DIRECTORY, { recursive: true, pattern: '**/blueprint.json' }).map(file => ({ ...$File.readJson(file), file }));
+						const blueprints: IBlueprintConfig[] = $File.getAll(BLUEPRINTS_DIRECTORY, { recursive: true, pattern: '**\\blueprint.json' }).map(file => ({ ...$File.readJson(file), file }));
 						if (blueprints.length) {
 							const name = await vscode.window.showQuickPick(blueprints.map(blueprint => blueprint.name), { placeHolder: 'Blueprints' });
 							if (name) {
@@ -83,7 +83,7 @@ export function activate(context: vscode.ExtensionContext) {
 									}
 									try {
 										const source = path.dirname(blueprint.file);
-										for (const file of $File.getAll(source, { recursive: true, pattern: '!**/blueprint.json' })) {
+										for (const file of $File.getAll(source, { recursive: true, pattern: '!**\\blueprint.json' })) {
 											const fileName = applyVariables(path.relative(source, file));
 											$File.write(path.join(targetPath, fileName), applyVariables($File.read(file)));
 										}
