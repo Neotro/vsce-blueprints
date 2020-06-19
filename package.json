@@ -2,7 +2,7 @@
 	"name": "blueprints",
 	"displayName": "Blueprints",
 	"description": "Workspace Blueprints",
-	"icon": "https://github.com/Neotro/vsce-blueprints/blob/master/assets/blueprints.png?raw=true",
+	"icon": "assets/blueprints.png",
 	"version": "0.0.1",
 	"publisher": "RudiJansenVanVuuren",
 	"repository": {
