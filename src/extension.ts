@@ -1,9 +1,8 @@
-import * as vscode from 'vscode';
-import { exec } from 'child_process';
-import { $Directory, $File } from '@neotro/system';
-import * as path from 'path';
 import { Enum } from '@neotro/core';
-import { strict } from 'assert';
+import { $Directory, $File } from '@neotro/system';
+import { exec } from 'child_process';
+import * as path from 'path';
+import * as vscode from 'vscode';
 
 export interface IBlueprintVariable {
 	name: string;
@@ -19,7 +18,7 @@ export interface IBlueprintConfig {
 	postscripts?: string[];
 }
 
-const BLUEPRINTS_DIRECTORY = path.join(__dirname, 'blueprints');
+const BLUEPRINTS_DIRECTORY = path.join(process.env.HOME || process.env.USERPROFILE, '.blueprints');
 
 export enum BlueprintsCommands { OpenBlueprintsFolder = 'Open Blueprints Folder', CreateBlueprint = 'Create Blueprint', GenerateBlueprint = 'Generate Blueprint' };
 
