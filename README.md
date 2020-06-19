@@ -17,6 +17,7 @@ Each blueprint should have a `blueprint.json` file. This file contains the manif
 | Property | Description |
 |--|--|
 | name | The name of the blueprint |
+| variableFiles | An array of mimimatches to find files containing variables. |
 | variables | An array of variables to be used throughout the blueprint. |
 | prescripts | Scripts to be run within the target directory, before the blueprint is initialized . |
 | postscripts | Scripts to be run within the target directory, after the blueprint has been initialized . |
