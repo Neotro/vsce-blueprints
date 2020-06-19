@@ -19,7 +19,7 @@ export interface IBlueprintConfig {
 	postscripts?: string[];
 }
 
-const BLUEPRINTS_DIRECTORY = `${__dirname}\\blueprints`;
+const BLUEPRINTS_DIRECTORY = path.join(__dirname, 'blueprint.json');
 
 export enum BlueprintsCommands { OpenBlueprintsFolder = 'Open Blueprints Folder', CreateBlueprint = 'Create Blueprint', GenerateBlueprint = 'Generate Blueprint' };
 
@@ -45,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 									prescripts: [],
 									postscripts: []
 								};
-								$File.create(`${folder}\\blueprint.json`, JSON.stringify(config, null, '\t'));
+								$File.create(path.join(folder, 'blueprint.json'), JSON.stringify(config, null, '\t'));
 								exec(`start "" "${folder}"`);
 
 							} else {
@@ -55,52 +55,56 @@ export function activate(context: vscode.ExtensionContext) {
 					});
 					break;
 				case BlueprintsCommands.GenerateBlueprint:
-					if (targetPath) {
-						const blueprints: IBlueprintConfig[] = $File.getAll(BLUEPRINTS_DIRECTORY, { recursive: true, pattern: '**\\blueprint.json' }).map(file => ({ ...$File.readJson(file), file }));
-						if (blueprints.length) {
-							const name = await vscode.window.showQuickPick(blueprints.map(blueprint => blueprint.name), { placeHolder: 'Blueprints' });
-							if (name) {
-								const blueprint = blueprints.find(_blueprint => _blueprint.name === name);
-								const variables: { [key: string]: string } = {};
-								for (const variable of (blueprint.variables || [])) {
-									const value = await vscode.window.showInputBox({ prompt: variable.description, placeHolder: variable.name, value: variable.default });
-									variables[variable.name] = value;
+					try {
+						if (targetPath) {
+							const blueprints: IBlueprintConfig[] = $File.getAll(BLUEPRINTS_DIRECTORY, { recursive: true, pattern: '**/blueprint.json' }).map(file => ({ ...$File.readJson(file), file }));
+							if (blueprints.length) {
+								const name = await vscode.window.showQuickPick(blueprints.map(blueprint => blueprint.name), { placeHolder: 'Blueprints' });
+								if (name) {
+									const blueprint = blueprints.find(_blueprint => _blueprint.name === name);
+									const variables: { [key: string]: string } = {};
+									for (const variable of (blueprint.variables || [])) {
+										const value = await vscode.window.showInputBox({ prompt: variable.description, placeHolder: variable.name, value: variable.default });
+										variables[variable.name] = value;
+									}
+									await vscode.window.withProgress({ title: `Generating blueprint ${blueprint.name}...`, location: vscode.ProgressLocation.Notification }, async () => {
+										function applyVariables(data: string): string {
+											for (const variable of (blueprint.variables || []).map(variable => variable.name)) {
+												data = data
+													.split(`$[${variable}]`).join(variables[variable])
+													.split(`$[=${variable}]`).join(variables[variable].toPascalCase())
+													.split(`$[~${variable}]`).join(variables[variable].toCamelCase())
+													.split(`$[_${variable}]`).join(variables[variable].toSnakeCase())
+													.split(`$[-${variable}]`).join(variables[variable].toKebabCase());
+											}
+											return data;
+										}
+										for (const script of blueprint.prescripts) {
+											exec(`cd "${targetPath}" && ${script}`)
+										}
+										try {
+											const source = path.dirname(blueprint.file);
+											for (const file of $File.getAll(source, { recursive: true, pattern: '!**/blueprint.json' })) {
+												const fileName = applyVariables(path.relative(source, file));
+												$File.write(path.join(targetPath, fileName), applyVariables($File.read(file)));
+											}
+										} catch (error) {
+											vscode.window.showErrorMessage(`Failed to generate blueprint ${blueprint.name}. ${error.message || error}`)
+										}
+										for (const script of blueprint.postscripts) {
+											exec(`cd "${targetPath}" && ${script}`)
+										}
+									});
+									vscode.window.showInformationMessage(`Done generating blueprint ${blueprint.name}.`);
 								}
-								await vscode.window.withProgress({ title: `Generating blueprint ${blueprint.name}...`, location: vscode.ProgressLocation.Notification }, async () => {
-									function applyVariables(data: string): string {
-										for (const variable of (blueprint.variables || []).map(variable => variable.name)) {
-											data = data
-												.split(`$[${variable}]`).join(variables[variable])
-												.split(`$[=${variable}]`).join(variables[variable].toPascalCase())
-												.split(`$[~${variable}]`).join(variables[variable].toCamelCase())
-												.split(`$[_${variable}]`).join(variables[variable].toSnakeCase())
-												.split(`$[-${variable}]`).join(variables[variable].toKebabCase());
-										}
-										return data;
-									}
-									for (const script of blueprint.prescripts) {
-										exec(`cd "${targetPath}" && ${script}`)
-									}
-									try {
-										const source = path.dirname(blueprint.file);
-										for (const file of $File.getAll(source, { recursive: true, pattern: '!**\\blueprint.json' })) {
-											const fileName = applyVariables(path.relative(source, file));
-											$File.write(path.join(targetPath, fileName), applyVariables($File.read(file)));
-										}
-									} catch (error) {
-										vscode.window.showErrorMessage(`Failed to generate blueprint ${blueprint.name}. ${error.message || error}`)
-									}
-									for (const script of blueprint.postscripts) {
-										exec(`cd "${targetPath}" && ${script}`)
-									}
-								});
-								vscode.window.showInformationMessage(`Done generating blueprint ${blueprint.name}.`);
+							} else {
+								vscode.window.showInformationMessage('There are no blueprints available.');
 							}
 						} else {
-							vscode.window.showInformationMessage('There are no blueprints available.');
+							vscode.window.showInformationMessage('Unable to generate blueprint. Invalid directory specified.');
 						}
-					} else {
-						vscode.window.showInformationMessage('Unable to generate blueprint. Invalid directory specified.');
+					} catch (error) {
+						vscode.window.showErrorMessage(error.message || error);
 					}
 					break;
 			}
