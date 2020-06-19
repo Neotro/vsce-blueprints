@@ -24,6 +24,7 @@ const BLUEPRINTS_DIRECTORY = `${__dirname}/blueprints`;
 export enum BlueprintsCommands { OpenBlueprintsFolder = 'Open Blueprints Folder', CreateBlueprint = 'Create Blueprint', GenerateBlueprint = 'Generate Blueprint' };
 
 export function activate(context: vscode.ExtensionContext) {
+	$Directory.create(BLUEPRINTS_DIRECTORY);
 	context.subscriptions.push(
 		vscode.commands.registerCommand('blueprints.blueprints', async (...args) => {
 			const targetPath = args[0]?.fsPath || vscode.workspace.rootPath;
