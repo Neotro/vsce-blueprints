@@ -59,6 +59,7 @@
 	},
 	"dependencies": {
 		"@neotro/core": "^1.0.19",
-		"@neotro/system": "^1.0.14"
+		"@neotro/system": "^1.0.14",
+		"minimatch": "^3.0.4"
 	}
 }
