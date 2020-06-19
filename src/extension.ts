@@ -19,7 +19,7 @@ export interface IBlueprintConfig {
 	postscripts?: string[];
 }
 
-const BLUEPRINTS_DIRECTORY = path.join(__dirname, 'blueprint.json');
+const BLUEPRINTS_DIRECTORY = path.join(__dirname, 'blueprints');
 
 export enum BlueprintsCommands { OpenBlueprintsFolder = 'Open Blueprints Folder', CreateBlueprint = 'Create Blueprint', GenerateBlueprint = 'Generate Blueprint' };
 
@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
 				case BlueprintsCommands.CreateBlueprint:
 					vscode.window.showInputBox({ placeHolder: 'Blueprint Name' }).then(async name => {
 						if (name) {
-							const folder = `${BLUEPRINTS_DIRECTORY}/${name}`;
+							const folder = path.join(BLUEPRINTS_DIRECTORY, name);
 							if (!$Directory.exists(folder)) {
 								$Directory.create(folder);
 								const config: IBlueprintConfig = {
