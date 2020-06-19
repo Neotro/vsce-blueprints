@@ -63,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
 								if (name) {
 									const blueprint = blueprints.find(_blueprint => _blueprint.name === name);
 									const variables: { [key: string]: string } = {};
-									for (const variable of (blueprint.variables || [])) {
+									for (const variable of blueprint.variables || []) {
 										const value = await vscode.window.showInputBox({ prompt: variable.description, placeHolder: variable.name, value: variable.default });
 										variables[variable.name] = value;
 									}
@@ -79,7 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
 											}
 											return data;
 										}
-										for (const script of blueprint.prescripts) {
+										for (const script of blueprint.prescripts || []) {
 											exec(`cd "${targetPath}" && ${script}`)
 										}
 										try {
@@ -91,7 +91,7 @@ export function activate(context: vscode.ExtensionContext) {
 										} catch (error) {
 											vscode.window.showErrorMessage(`Failed to generate blueprint ${blueprint.name}. ${error.message || error}`)
 										}
-										for (const script of blueprint.postscripts) {
+										for (const script of blueprint.postscripts || []) {
 											exec(`cd "${targetPath}" && ${script}`)
 										}
 									});
