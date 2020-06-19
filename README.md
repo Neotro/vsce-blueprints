@@ -4,11 +4,11 @@ This extension allows you to create workspace files via a blueprint.
 
 ## How to generate a blueprint?
 
-![Generating a blueprint](assets/generate-blueprint.gif)
+![Generating a blueprint](https://raw.githubusercontent.com/Neotro/vsce-blueprints/master/assets/generate-blueprint.gif)
 
 ## How to create a new blueprint?
 
-![Creating a blueprint](assets/create-blueprint.gif)
+![Creating a blueprint](https://github.com/Neotro/vsce-blueprints/blob/master/assets/create-blueprint.gif?raw=true)
 
 ## Blueprint Configuration
 

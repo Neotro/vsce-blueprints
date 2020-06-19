@@ -2,10 +2,12 @@
 	"name": "blueprints",
 	"displayName": "Blueprints",
 	"description": "Workspace Blueprints",
-	"icon": "assets/blueprints.png",
+	"icon": "https://github.com/Neotro/vsce-blueprints/blob/master/assets/blueprints.png?raw=true",
 	"version": "0.0.1",
-	"author": {
-		"name": "Rudi Jansen van Vuuren"
+	"publisher": "RudiJansenVanVuuren",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Neotro/vsce-blueprints"
 	},
 	"engines": {
 		"vscode": "^1.46.0"
