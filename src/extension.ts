@@ -1,6 +1,7 @@
 import { Enum } from '@neotro/core';
 import { $Directory, $File } from '@neotro/system';
 import { exec } from 'child_process';
+import { match } from 'minimatch';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
@@ -13,6 +14,7 @@ export interface IBlueprintVariable {
 export interface IBlueprintConfig {
 	file?: string;
 	name: string;
+	variableFiles?: string[];
 	variables?: IBlueprintVariable[];
 	prescripts?: string[];
 	postscripts?: string[];
@@ -40,6 +42,11 @@ export function activate(context: vscode.ExtensionContext) {
 								$Directory.create(folder);
 								const config: IBlueprintConfig = {
 									name,
+									variableFiles: [
+										'*.txt',
+										'*.ts',
+										'*.js'
+									],
 									variables: [],
 									prescripts: [],
 									postscripts: []
@@ -84,8 +91,12 @@ export function activate(context: vscode.ExtensionContext) {
 										try {
 											const source = path.dirname(blueprint.file);
 											for (const file of $File.getAll(source, { recursive: true, pattern: '!**/blueprint.json' })) {
-												const fileName = applyVariables(path.relative(source, file));
-												$File.write(path.join(targetPath, fileName), applyVariables($File.read(file)));
+												const sub = path.relative(source, file);
+												if (blueprint.variableFiles?.some(mime => match([sub], mime, { dot: true }).length)) {
+													$File.write(path.join(targetPath, path.dirname(sub), applyVariables(path.basename(sub))), applyVariables($File.read(file)));
+												} else {
+													$File.copy(file, path.join(targetPath, path.dirname(sub), applyVariables(path.basename(sub))));
+												}
 											}
 										} catch (error) {
 											vscode.window.showErrorMessage(`Failed to generate blueprint ${blueprint.name}. ${error.message || error}`)
