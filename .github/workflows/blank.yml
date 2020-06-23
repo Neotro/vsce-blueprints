@@ -1,0 +1,33 @@
+name: Publish Package
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Version Check
+      id: versionCheck
+      uses: EndBug/version-check@v1
+      with:
+        diff-search: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install Dependencies
+      if: steps.check.outputs.changed == 'true'
+      run: npm install
+
+    - name: Build
+      if: steps.check.outputs.changed == 'true'
+      run: npx tsc -p .
+
+    - name: Publish
+      if: steps.check.outputs.changed == 'true'
+      run: npx vsce publish -p ${{ secrets.VSCE_TOKEN }}
