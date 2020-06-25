@@ -27,13 +27,13 @@ jobs:
         npm config set //npm.pkg.github.com/:_authToken ${{ secrets.PACKAGES_TOKEN }}
 
     - name: Install Dependencies
-      if: steps.check.outputs.changed == 'true'
+      if: steps.versionCheck.outputs.changed == 'true'
       run: npm install
 
     - name: Build
-      if: steps.check.outputs.changed == 'true'
+      if: steps.versionCheck.outputs.changed == 'true'
       run: npx tsc -p .
 
     - name: Publish
-      if: steps.check.outputs.changed == 'true'
+      if: steps.versionCheck.outputs.changed == 'true'
       run: npx vsce publish -p ${{ secrets.VSCE_TOKEN }}

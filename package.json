@@ -3,7 +3,7 @@
 	"displayName": "Blueprints",
 	"description": "Workspace Blueprints",
 	"icon": "assets/blueprints.png",
-	"version": "4.0.10",
+	"version": "4.0.11",
 	"publisher": "RudiJansenVanVuuren",
 	"repository": {
 		"type": "git",
