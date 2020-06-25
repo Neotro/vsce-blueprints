@@ -92,10 +92,11 @@ export function activate(context: vscode.ExtensionContext) {
 											const source = path.dirname(blueprint.file);
 											for (const file of $File.getAll(source, { recursive: true, pattern: '!**/blueprint.json' })) {
 												const sub = path.relative(source, file);
+												const parsedSub = applyVariables(sub);
 												if (blueprint.variableFiles?.some(mime => match([sub], mime, { dot: true }).length)) {
-													$File.write(path.join(targetPath, path.dirname(sub), applyVariables(path.basename(sub))), applyVariables($File.read(file)));
+													$File.write(path.join(targetPath, parsedSub), applyVariables($File.read(file)));
 												} else {
-													$File.copy(file, path.join(targetPath, path.dirname(sub), applyVariables(path.basename(sub))));
+													$File.copy(file, path.join(targetPath, parsedSub));
 												}
 											}
 										} catch (error) {
