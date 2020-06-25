@@ -1,9 +1,8 @@
-# Change Log
+# Changelog
 
-All notable changes to the "blueprints" extension will be documented in this file.
+## Version 4.0.9
+### Added
+- Variable support for folders.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+## Version 4.0.8
+### Stable Release
