@@ -30,10 +30,6 @@ jobs:
       if: steps.versionCheck.outputs.changed == 'true'
       run: npm install
 
-    - name: Build
-      if: steps.versionCheck.outputs.changed == 'true'
-      run: npx tsc -p .
-
     - name: Publish
       if: steps.versionCheck.outputs.changed == 'true'
       run: npx vsce publish -p ${{ secrets.VSCE_TOKEN }}
