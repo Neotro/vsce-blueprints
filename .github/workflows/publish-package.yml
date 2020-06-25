@@ -20,6 +20,12 @@ jobs:
         diff-search: true
         token: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Configure GitHub Registry
+      if: steps.versionCheck.outputs.changed == 'true'
+      run: |
+        npm config set @neotro:registry https://npm.pkg.github.com/
+        npm config set //npm.pkg.github.com/:_authToken ${{ secrets.PACKAGES_TOKEN }}
+
     - name: Install Dependencies
       if: steps.check.outputs.changed == 'true'
       run: npm install
