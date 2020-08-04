@@ -1,4 +1,8 @@
-# Changelog
+# **Changelog**
+
+## Version 4.0.12
+### Added
+- Support for workspace blueprints.
 
 ## Version 4.0.9
 ### Added

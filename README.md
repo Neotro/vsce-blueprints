@@ -1,4 +1,4 @@
-# Blueprints
+# **Blueprints**
 
 This extension allows you to create workspace files via a blueprint.
 

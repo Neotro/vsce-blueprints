@@ -9,12 +9,12 @@
 		],
 		"sourceMap": true,
 		"paths": {
-			"@neotro/core": [
-				"core/src"
-			],
-			"@neotro/system": [
-				"system/src"
-			]
+			// "@neotro/core": [
+			// 	"core/src"
+			// ],
+			// "@neotro/system": [
+			// 	"system/src"
+			// ]
 		}
 	},
 	"exclude": [
