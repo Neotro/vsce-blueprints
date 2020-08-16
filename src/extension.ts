@@ -1,4 +1,4 @@
-import { Enum } from '@neotro/core';
+import { Enum, json } from '@neotro/core';
 import { $Directory, $File } from '@neotro/system';
 import { exec } from 'child_process';
 import { match } from 'minimatch';
@@ -67,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
 										prescripts: [],
 										postscripts: []
 									};
-									$File.create(path.join(folder, 'blueprint.json'), JSON.stringify(config, null, '\t'));
+									$File.create(path.join(folder, 'blueprint.json'), json(config));
 									exec(`start "" "${folder}"`);
 
 								} else {
